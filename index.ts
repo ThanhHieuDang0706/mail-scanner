@@ -3,14 +3,27 @@ import { ClientSecretCredential } from "@azure/identity";
 import { Message } from "@microsoft/microsoft-graph-types";
 import axios from "axios";
 import dotenv from "dotenv";
+import { AzureOpenAI } from "openai";
 
-dotenv.config();
+const env = process.env.NODE_ENV || "development";
+if (env === "development") {
+    dotenv.config({ path: ".env.local" });
+}
+else {
+    dotenv.config();
+}
+
 
 const {
     CLIENT_ID,
     CLIENT_SECRET,
     TENANT_ID,
     AZURE_OPENAI_API_KEY,
+    AZURE_OPENAI_API_ENDPOINT,
+    AZURE_OPENAI_API_VERSION,
+    AZURE_OPENAI_DEPLOYMENT_NAME,
+    SUMMARY_TARGET_EMAIL,
+    TARGET_USER_ID
 } = process.env;
 
 async function getAccessToken(): Promise<string> {
@@ -28,7 +41,7 @@ async function getGraphClient(): Promise<Client> {
 
 async function fetchUnreadEmails(graphClient: Client): Promise<Message[]> {
     const response = await graphClient
-        .api('//mailFolders/Inbox/messages')
+        .api(`users/${TARGET_USER_ID}/mailFolders/Inbox/messages`)
         .filter('isRead eq false')
         .select('id,subject,bodyPreview,from')
         .get();
@@ -51,18 +64,20 @@ Respond with JSON:
   "summary": "..."
 }
 `;
-
-    const response = await axios.post("https://api.openai.com/v1/chat/completions", {
-        model: "gpt-4",
+    const azureOpenAIOptions = {
+        apiKey: AZURE_OPENAI_API_KEY,
+        endpoint: AZURE_OPENAI_API_ENDPOINT,
+        apiVersion: AZURE_OPENAI_API_VERSION,
+        deployment: AZURE_OPENAI_DEPLOYMENT_NAME,
+    }
+    console.log("Using Azure OpenAI with options:", azureOpenAIOptions);
+    const azureOpenAIClient = new AzureOpenAI(azureOpenAIOptions)
+    const response = await azureOpenAIClient.chat.completions.create({
+        model: AZURE_OPENAI_DEPLOYMENT_NAME,
         messages: [{ role: "user", content: prompt }],
         temperature: 0.2,
-    }, {
-        headers: {
-            Authorization: `Bearer ${process.env.AZURE_OPENAI_API_KEY}`,
-        },
-    });
-
-    const content = response.data.choices[0].message.content;
+    })
+    const content = response.choices[0].message.content;
     try {
         return JSON.parse(content);
     } catch (err) {
@@ -74,7 +89,7 @@ Respond with JSON:
 (async () => {
     const client = await getGraphClient();
     const emails = await fetchUnreadEmails(client);
-
+    console.log(`Found ${emails.length} unread emails.`);
 
     for (const email of emails) {
         const result = await classifyWithOpenAI(email.subject, email.bodyPreview);

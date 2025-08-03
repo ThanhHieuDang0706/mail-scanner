@@ -25,9 +25,11 @@
   "dependencies": {
     "@azure/identity": "^4.10.2",
     "@azure/msal-node": "^3.6.4",
+    "@azure/openai": "^2.0.0",
     "@microsoft/microsoft-graph-client": "^3.0.7",
     "axios": "^1.11.0",
     "dotenv": "^17.2.1",
+    "openai": "^5.11.0",
     "ts-node": "^10.9.2"
   },
   "devDependencies": {
