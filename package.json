@@ -1,0 +1,44 @@
+{
+  "name": "mail-scanner",
+  "version": "1.0.0",
+  "description": "Scan the mailbox and report the status",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "jiti index.ts",
+    "build": "tsc --project tsconfig.json",
+    "lint": "eslint . --ext .ts,.js",
+    "lint:fix": "eslint . --ext .ts,.js --fix",
+    "start": "node dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ThanhHieuDang0706/mail-scanner.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ThanhHieuDang0706/mail-scanner/issues"
+  },
+  "homepage": "https://github.com/ThanhHieuDang0706/mail-scanner#readme",
+  "dependencies": {
+    "@azure/identity": "^4.10.2",
+    "@azure/msal-node": "^3.6.4",
+    "@microsoft/microsoft-graph-client": "^3.0.7",
+    "axios": "^1.11.0",
+    "dotenv": "^17.2.1",
+    "ts-node": "^10.9.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.32.0",
+    "@microsoft/microsoft-graph-types": "^2.40.0",
+    "@types/node": "^24.1.0",
+    "eslint": "^9.32.0",
+    "globals": "^16.3.0",
+    "jiti": "^2.5.1",
+    "typescript": "^5.8.0",
+    "typescript-eslint": "^8.38.0"
+  },
+  "type": "module"
+}
