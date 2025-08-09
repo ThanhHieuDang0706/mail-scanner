@@ -4,6 +4,7 @@ import { Message } from "@microsoft/microsoft-graph-types";
 import axios from "axios";
 import dotenv from "dotenv";
 import { AzureOpenAI } from "openai";
+import { app } from "@azure/functions";
 
 const env = process.env.NODE_ENV || "development";
 if (env === "development") {
@@ -225,7 +226,7 @@ async function markEmailAsRead(graphClient: Client, emailId: string): Promise<vo
 }
 
 // Updated main execution
-(async () => {
+export async function main(): Promise<void> {
     try {
         console.log("Starting email scanner...");
 
@@ -263,4 +264,11 @@ async function markEmailAsRead(graphClient: Client, emailId: string): Promise<vo
         console.error("Error running email scanner:", error);
         process.exit(1);
     }
-})();
+}
+
+app.timer('timetrigger', {
+    schedule: '0 1 * * 6',
+    handler: async () => {
+        await main();
+    }
+});
