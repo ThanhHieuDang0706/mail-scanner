@@ -1,7 +1,6 @@
 import { Client } from "@microsoft/microsoft-graph-client";
 import { ClientSecretCredential } from "@azure/identity";
 import { Message } from "@microsoft/microsoft-graph-types";
-import axios from "axios";
 import dotenv from "dotenv";
 import { AzureOpenAI } from "openai";
 import { app } from "@azure/functions";
