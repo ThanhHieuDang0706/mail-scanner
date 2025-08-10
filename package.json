@@ -4,7 +4,6 @@
   "description": "Scan the mailbox and report the status",
   "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "jiti index.ts",
     "build": "tsc --project tsconfig.json",
     "lint": "eslint . --ext .ts,.js",
