@@ -6,6 +6,9 @@
         "moduleResolution": "node",
         "sourceMap": true,
         "outDir": "dist",
-        "lib": ["ESNext"]
-    }
+        "lib": ["ESNext"],
+        "skipLibCheck": true
+    },
+    "exclude": ["node_modules", "dist"],
+    "include": ["**/*.ts"]
 }
